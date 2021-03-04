@@ -1,0 +1,1 @@
+const jumboDiv = $('<div>').addClass('jumbotron');
