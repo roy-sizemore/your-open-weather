@@ -2,22 +2,11 @@ const $jumboDiv = $('<div>').addClass('jumbotron jumbotron-fluid');
 const $contain1 = $('<div>').addClass('container container-fluid d-flex flex-row float-left pl-5');
 const $h1 = $('<h1>').addClass('h-1 pb-3 pl-5').text('Welcome to Your OpenWeather');
 const $btn = $('<button>').addClass('btn btn-dark flex-shrink-0').text('See Your Weather');
-const $searchInput = $('<input>').attr({type: 'text', placeholder: 'Enter your US location, ex: Columbus, Ohio'}).addClass('form-control aria-label text');
+const $searchInput = $('<input>').attr({type: 'text', placeholder: 'Enter your location, ex: Columbus, OH'}).addClass('form-control aria-label text');
 $contain1.append($searchInput);
 $contain1.append($btn);
 $jumboDiv.append($h1, $contain1);
 $('body').append($jumboDiv);
-
-$btn.on('click', () => {
-  $.ajax({
-    url: `https://api.openweathermap.org/data/2.5/weather?q=${$searchInput.val()}&appid=9b1d4def9f4c5a84bc5a47775e26390d`,
-    method: 'GET',
-  }).then(function (response) {
-    console.log(response);
-  });
-  
-  localStorage.setItem('location', $searchInput.val());
-});
 
 const $contain2 = $('<div>').addClass('container container-fluid d-flex flex-row float-left p-5');
 for (i = 0; i < 5; i++) {
@@ -25,6 +14,47 @@ for (i = 0; i < 5; i++) {
     $contain2.append($card);
 };
 $jumboDiv.append($contain2);
+
+let n = 0;
+const getWeather = () => {
+  $.ajax({
+    url: `https://api.openweathermap.org/data/2.5/weather?q=${$searchInput.val()},us&appid=9b1d4def9f4c5a84bc5a47775e26390d`,
+    method: 'GET',
+  }).then((response) => {
+    console.log(response);
+  });
+  
+  localStorage.setItem('location' + n, $searchInput.val());
+  n++;
+};
+
+$btn.on('click', () => {getWeather(), getForecast(), uvIndex()});
+$searchInput.on('keypress', (e) => {
+  if (e.which === 13) {
+    getWeather();
+    getForecast();
+    uvIndex();
+  };
+});
+
+const getForecast = () => {
+  $.ajax({
+    url: `https://api.openweathermap.org/data/2.5/forecast?q=${$searchInput.val()}&appid=9b1d4def9f4c5a84bc5a47775e26390d`,
+    method: 'GET',
+  }).then((response) => {
+    console.log(response);
+  });
+};
+
+const uvIndex = () => {
+  $.ajax({
+    url: `https://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&appid=9b1d4def9f4c5a84bc5a47775e26390d`,
+    method: 'GET',
+  }).then((response) => {
+    console.log(response)
+  })
+};
+
 
 // 5 day forecast: `https://api.openweathermap.org/data/2.5/forecast?q=${$searchInput.val()}&appid=9b1d4def9f4c5a84bc5a47775e26390d`
 // UV index: `https://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&appid=9b1d4def9f4c5a84bc5a47775e26390d`
