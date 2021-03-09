@@ -1,0 +1,23 @@
+#stats {
+    height: 100px;
+    width: 100%;
+}
+
+.searchHist {
+    padding: 10px;
+    margin: 5px 5px 0px 0px;
+    border: 1px solid grey;
+}
+
+.card {
+    border: 1px solid blue;
+    background-color: skyblue;
+    height: 150px;
+    width: 150px;
+}
+
+textarea {
+    border: none;
+    resize: none;
+    width: 100%;
+}

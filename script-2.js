@@ -1,7 +1,7 @@
 const $jumboDiv = $('<div>').addClass('jumbotron jumbotron-fluid');
 const $forecastCol = $('<div>').addClass('container container-fluid flex-row float-left w-75')
 const $searchCol = $('<div>').addClass('container container-fluid flex-row float-left w-25')
-const $contain1 = $('<div>').addClass('container container-fluid d-flex flex-row float-left pl-5');
+const $contain1 = $('<div>').addClass('container container-fluid pl-5');
 const $h1 = $('<h1>').addClass('h-1 pb-3 pl-5').text('Welcome to Your OpenWeather');
 const $btn = $('<button>').addClass('btn btn-dark flex-shrink-0 w-25')
 const $magGlass = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></svg>';
@@ -14,31 +14,28 @@ $jumboDiv.append($h1);
 $forecastCol.append($contain1, $contain2)
 $('body').append($jumboDiv, $searchCol, $forecastCol);
 
-const cardFill = () => {
-  for (i = 0; i < 5; i++) {
-    const $card = $('<div>').addClass('card');
-    const $textArea = $('<textarea>').attr({style: 'height: 200px; resize: none'}).text(`Temp: ${response.weather.wind.speed}\n\nHumidity: \n\nWind Speed: \n\nUV Index: \n`);
-    $card.append($textArea);
-    $contain2.append($card);
-  };      
-};
+for (i = 0; i < 5; i++) {
+  const $card = $('<div>').addClass('card m-2').attr('id', i)
+  $contain2.append($card)
+}
 
 let n = 0;
 const getWeather = () => {
   $.ajax({
-    url: `https://api.openweathermap.org/data/2.5/weather?q=${$searchInput.val()},us&appid=9b1d4def9f4c5a84bc5a47775e26390d`,
+    url: `https://api.openweathermap.org/data/2.5/weather?q=${$searchInput.val()},us&units=imperial&appid=9b1d4def9f4c5a84bc5a47775e26390d`,
     method: 'GET',
   }).then((response) => {
     console.log(response);
-    $('.city-title').text('');
-    $forecastCol.prepend($('<h2>').text(response.name).addClass('city-title pt-1 pl-1 ml-1'));
+    $('#city-title').text('')
+    $contain1.append($('<h2>').text(response.name).attr('id', 'city-title').addClass('w-100'))
     
+    $contain1.append($('<div>').attr('id', 'stats').addClass('w-100'))
+    $('#stats').append($('<textarea>').text(`Temperature: \nHumidity: \nWind Speed: \nUV Index: `).addClass('h-100'))
     if (!(response.name in localStorage)) {
         localStorage.setItem(response.name, response.name);
-        $searchCol.append($('<div>').addClass('w-100 border border-dark mt-1 p-1').text(response.name));
+        $searchCol.append($('<div>').addClass('w-100 searchHist').text(response.name).attr('id', response.name))
         };
     });
-
     n++;
     $searchInput.val('')
 };
@@ -50,29 +47,19 @@ const getForecast = () => {
     success: function(data) {
         lat = data.city.coord.lat
         lon = data.city.coord.lon
-        const $card = $('<div>').addClass('card');
-        const $textArea = $('<textarea>').attr({style: 'height: 200px; resize: none'}).text(`Temp: ${$searchInput.weather.wind.speed}\n\nHumidity: \n\nWind Speed: \n\nUV Index: \n`);
-        $card.append($textArea);
-        $contain2.append($card);
     }
-  }).then((response) => {
+  }).then((response) => {; 
     console.log(response);
     $.ajax({
         url: `https://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&appid=9b1d4def9f4c5a84bc5a47775e26390d`,
         method: 'GET',
       }).then((response) => {
-        for (i = 0; i < 4; i++) {
-          const $card = $('<div>').addClass('card');
-          const $textArea = $('<textarea>').attr({style: 'height: 200px; resize: none'}).text(`Temp: ${$searchInput.weather.wind.speed}\n\nHumidity: \n\nWind Speed: \n\nUV Index: \n`);
-          $card.append($textArea);
-          $contain2.append($card);
-        };      
-      });
+        console.log(response)
+      })
   });
 };
 
 $btn.on('click', () => {getWeather(), getForecast()});
-
 $searchInput.on('keypress', (e) => {
   if (e.which === 13) {
     getWeather();
