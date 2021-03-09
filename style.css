@@ -1,6 +1,14 @@
 #stats {
-    height: 100px;
     width: 100%;
+}
+
+#uv_index {
+    display: hidden;
+}
+
+#index_button {
+    width: 25px;
+    height: 10px;
 }
 
 .searchHist {
@@ -12,12 +20,44 @@
 .card {
     border: 1px solid blue;
     background-color: skyblue;
+    color: white;
+    justify-items: center;
+    font-weight: bold;
+    padding: 9px;
     height: 150px;
     width: 150px;
+    flex-shrink: 0;
+}
+
+.box {
+    height: 25px;
+    width: 200px;
 }
 
 textarea {
     border: none;
     resize: none;
+    height: 72px;
     width: 100%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+img {
+    height: 50px;
+    width: 50px;
+}
+
+#index-box {
+    color: white;
+    padding-left: 4px;
+    flex-shrink: 0;
+    border-radius: 5px;
+}
+
+#now-icon {
+    background-color: darkblue;
+    height: 50px;
+    width: 50px;
+    border-radius: 5px;
 }
